@@ -371,6 +371,257 @@ struct ExerciseData {
             equipmentLevel: .none,
             equipment: []
         ),
+
+        // Hip Stretches
+        Exercise(
+            id: "hip-flexor-stretch",
+            name: "Hip Flexor Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes, .quads],
+            description: "Kneeling lunge position, push hips forward. Opens tight hip flexors.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "90-90-stretch",
+            name: "90/90 Hip Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings],
+            description: "Both legs at 90 degrees. Deep hip internal and external rotation.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "butterfly-stretch",
+            name: "Butterfly Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings],
+            description: "Seated, soles of feet together. Opens inner thighs and hips.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "frog-stretch",
+            name: "Frog Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings],
+            description: "On all fours, spread knees wide. Deep groin and hip opener.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "figure-four-stretch",
+            name: "Figure Four Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes],
+            description: "Lie on back, cross ankle over knee. Stretches piriformis and glutes.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "happy-baby",
+            name: "Happy Baby Pose",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings],
+            description: "On back, grab feet, pull knees down. Hip opener and lower back release.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "lizard-pose",
+            name: "Lizard Pose",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings, .quads],
+            description: "Deep lunge with forearms down. Intense hip flexor stretch.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+
+        // Back Stretches
+        Exercise(
+            id: "cat-cow",
+            name: "Cat-Cow Stretch",
+            category: .flexibility,
+            muscleGroups: [.back, .abs],
+            description: "On all fours, alternate arching and rounding spine. Spinal mobility.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "seated-spinal-twist",
+            name: "Seated Spinal Twist",
+            category: .flexibility,
+            muscleGroups: [.back, .obliques],
+            description: "Seated, twist torso to one side. Rotational spine mobility.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "lying-spinal-twist",
+            name: "Lying Spinal Twist",
+            category: .flexibility,
+            muscleGroups: [.back, .glutes],
+            description: "On back, drop knees to one side. Releases lower back tension.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "thread-the-needle",
+            name: "Thread the Needle",
+            category: .flexibility,
+            muscleGroups: [.back, .shoulders],
+            description: "On all fours, reach arm under body. Upper back and shoulder stretch.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "sphinx-pose",
+            name: "Sphinx Pose",
+            category: .flexibility,
+            muscleGroups: [.back, .abs],
+            description: "Lie on stomach, prop on forearms. Gentle backbend for lower back.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "knees-to-chest",
+            name: "Knees to Chest",
+            category: .flexibility,
+            muscleGroups: [.back, .glutes],
+            description: "Lie on back, hug knees to chest. Releases lower back.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "standing-forward-fold",
+            name: "Standing Forward Fold",
+            category: .flexibility,
+            muscleGroups: [.hamstrings, .back],
+            description: "Bend forward from hips, let head hang. Stretches entire back body.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+
+        // Shoulder Stretches
+        Exercise(
+            id: "cross-body-shoulder",
+            name: "Cross Body Shoulder Stretch",
+            category: .flexibility,
+            muscleGroups: [.shoulders],
+            description: "Pull arm across body. Stretches rear deltoid.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "overhead-tricep-stretch",
+            name: "Overhead Tricep Stretch",
+            category: .flexibility,
+            muscleGroups: [.triceps, .shoulders],
+            description: "Reach arm overhead, pull elbow behind head. Tricep and lat stretch.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "shoulder-circles",
+            name: "Shoulder Circles",
+            category: .flexibility,
+            muscleGroups: [.shoulders],
+            description: "Roll shoulders forward and backward. Loosens shoulder joints.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "arm-circles",
+            name: "Arm Circles",
+            category: .flexibility,
+            muscleGroups: [.shoulders],
+            description: "Extend arms, make circles. Dynamic shoulder warm-up.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "doorway-chest-stretch",
+            name: "Doorway Chest Stretch",
+            category: .flexibility,
+            muscleGroups: [.chest, .shoulders],
+            description: "Arm on doorframe, lean through. Opens chest and front shoulder.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "eagle-arms",
+            name: "Eagle Arms",
+            category: .flexibility,
+            muscleGroups: [.shoulders, .back],
+            description: "Cross arms, wrap forearms. Stretches upper back and shoulders.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "puppy-pose",
+            name: "Puppy Pose",
+            category: .flexibility,
+            muscleGroups: [.shoulders, .back],
+            description: "On knees, walk hands forward, chest down. Deep shoulder opener.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "wall-angels",
+            name: "Wall Angels",
+            category: .flexibility,
+            muscleGroups: [.shoulders, .back],
+            description: "Back against wall, slide arms up and down. Shoulder mobility drill.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+
+        // Additional Full Body Stretches
+        Exercise(
+            id: "worlds-greatest-stretch",
+            name: "World's Greatest Stretch",
+            category: .flexibility,
+            muscleGroups: [.glutes, .hamstrings, .back, .shoulders],
+            description: "Lunge, rotate, reach. Hits hips, hamstrings, back, and shoulders.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "seated-forward-fold",
+            name: "Seated Forward Fold",
+            category: .flexibility,
+            muscleGroups: [.hamstrings, .back],
+            description: "Sit with legs extended, reach for toes. Hamstring and back stretch.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "standing-quad-stretch",
+            name: "Standing Quad Stretch",
+            category: .flexibility,
+            muscleGroups: [.quads],
+            description: "Stand, pull foot to glutes. Stretches front of thigh.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "calf-stretch-wall",
+            name: "Wall Calf Stretch",
+            category: .flexibility,
+            muscleGroups: [.calves],
+            description: "Hands on wall, step back with one leg. Stretches calf muscle.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
+        Exercise(
+            id: "neck-stretches",
+            name: "Neck Stretches",
+            category: .flexibility,
+            muscleGroups: [.shoulders],
+            description: "Tilt head side to side, forward and back. Releases neck tension.",
+            equipmentLevel: .none,
+            equipment: []
+        ),
     ]
 
     // MARK: - Minimal Equipment (Dumbbells, Bands, Pull-up Bar)
