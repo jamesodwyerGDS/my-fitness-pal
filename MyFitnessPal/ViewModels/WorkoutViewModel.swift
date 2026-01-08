@@ -6,15 +6,22 @@ class WorkoutViewModel: ObservableObject {
     @Published var todayWorkouts: [Workout] = []
     @Published var activeWorkout: Workout?
     @Published var selectedCategory: ExerciseCategory?
+    @Published var selectedEquipmentLevel: EquipmentLevel = .none
     @Published var showExercisePicker = false
+    @Published var showEquipmentSelector = false
 
     private let workoutService = WorkoutService.shared
 
     var filteredExercises: [Exercise] {
+        let equipmentLevel = activeWorkout?.equipmentLevel ?? selectedEquipmentLevel
         if let category = selectedCategory {
-            return ExerciseData.exercises(for: category)
+            return ExerciseData.exercises(for: category, equipmentLevel: equipmentLevel)
         }
-        return ExerciseData.calisthenicsExercises
+        return ExerciseData.exercises(for: equipmentLevel)
+    }
+
+    var availableExerciseCount: Int {
+        ExerciseData.exerciseCount(for: selectedEquipmentLevel)
     }
 
     func loadTodayWorkouts() {
@@ -27,8 +34,16 @@ class WorkoutViewModel: ObservableObject {
     }
 
     func startNewWorkout(name: String) {
-        let workoutName = name.isEmpty ? "Calisthenics Workout" : name
-        activeWorkout = workoutService.createWorkout(name: workoutName)
+        let workoutName: String
+        switch selectedEquipmentLevel {
+        case .none:
+            workoutName = name.isEmpty ? "Bodyweight Workout" : name
+        case .minimal:
+            workoutName = name.isEmpty ? "Home Workout" : name
+        case .full:
+            workoutName = name.isEmpty ? "Gym Workout" : name
+        }
+        activeWorkout = workoutService.createWorkout(name: workoutName, equipmentLevel: selectedEquipmentLevel)
         loadTodayWorkouts()
     }
 
@@ -62,6 +77,12 @@ class WorkoutViewModel: ObservableObject {
     func updateSetReps(_ set: ExerciseSet, reps: Int, in exerciseId: String) {
         var updatedSet = set
         updatedSet.reps = reps
+        updateSet(updatedSet, in: exerciseId)
+    }
+
+    func updateSetWeight(_ set: ExerciseSet, weight: Double, in exerciseId: String) {
+        var updatedSet = set
+        updatedSet.weight = weight
         updateSet(updatedSet, in: exerciseId)
     }
 

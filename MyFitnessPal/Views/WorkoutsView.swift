@@ -9,9 +9,14 @@ struct WorkoutsView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     if viewModel.activeWorkout == nil {
+                        // Equipment Level Selector
+                        EquipmentLevelSelector(selectedLevel: $viewModel.selectedEquipmentLevel)
+
                         // Start New Workout
                         StartWorkoutCard(
                             workoutName: $workoutName,
+                            equipmentLevel: viewModel.selectedEquipmentLevel,
+                            exerciseCount: viewModel.availableExerciseCount,
                             onStart: {
                                 viewModel.startNewWorkout(name: workoutName)
                                 workoutName = ""
@@ -38,17 +43,89 @@ struct WorkoutsView: View {
     }
 }
 
+struct EquipmentLevelSelector: View {
+    @Binding var selectedLevel: EquipmentLevel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Equipment Available")
+                .font(.headline)
+
+            ForEach(EquipmentLevel.allCases, id: \.self) { level in
+                EquipmentOptionRow(
+                    level: level,
+                    isSelected: selectedLevel == level,
+                    onSelect: { selectedLevel = level }
+                )
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .padding(.horizontal)
+    }
+}
+
+struct EquipmentOptionRow: View {
+    let level: EquipmentLevel
+    let isSelected: Bool
+    let onSelect: () -> Void
+
+    var body: some View {
+        Button(action: onSelect) {
+            HStack(spacing: 12) {
+                Image(systemName: level.icon)
+                    .font(.title2)
+                    .foregroundColor(isSelected ? .white : .blue)
+                    .frame(width: 44, height: 44)
+                    .background(isSelected ? Color.blue : Color.blue.opacity(0.1))
+                    .cornerRadius(10)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(level.displayName)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Text(level.description)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding(12)
+            .background(isSelected ? Color.blue.opacity(0.1) : Color(.systemGray6))
+            .cornerRadius(10)
+        }
+    }
+}
+
 struct StartWorkoutCard: View {
     @Binding var workoutName: String
+    let equipmentLevel: EquipmentLevel
+    let exerciseCount: Int
     let onStart: () -> Void
 
     var body: some View {
         VStack(spacing: 12) {
+            HStack {
+                Image(systemName: equipmentLevel.icon)
+                    .foregroundColor(.blue)
+                Text("\(exerciseCount) exercises available")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
             TextField("Workout name (optional)", text: $workoutName)
                 .textFieldStyle(.roundedBorder)
 
             Button(action: onStart) {
-                Text("Start New Workout")
+                Text("Start \(equipmentLevel.displayName) Workout")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
@@ -74,6 +151,10 @@ struct TodayWorkoutsCard: View {
 
             ForEach(workouts) { workout in
                 HStack {
+                    Image(systemName: workout.equipmentLevel.icon)
+                        .foregroundColor(.blue)
+                        .frame(width: 24)
+
                     VStack(alignment: .leading) {
                         Text(workout.name)
                             .fontWeight(.medium)
@@ -108,9 +189,17 @@ struct ActiveWorkoutView: View {
         VStack(spacing: 16) {
             // Header
             HStack {
-                Text(viewModel.activeWorkout?.name ?? "Workout")
-                    .font(.title2)
-                    .fontWeight(.bold)
+                VStack(alignment: .leading) {
+                    Text(viewModel.activeWorkout?.name ?? "Workout")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    HStack {
+                        Image(systemName: viewModel.activeWorkout?.equipmentLevel.icon ?? "figure.stand")
+                        Text(viewModel.activeWorkout?.equipmentLevel.displayName ?? "")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }
                 Spacer()
                 Button("Complete") {
                     viewModel.completeWorkout()
@@ -123,12 +212,16 @@ struct ActiveWorkoutView: View {
             ForEach(viewModel.activeWorkout?.exercises ?? []) { workoutExercise in
                 ExerciseCard(
                     workoutExercise: workoutExercise,
+                    showWeight: !workoutExercise.exercise.isBodyweight,
                     onAddSet: { viewModel.addSet(to: workoutExercise.id) },
                     onToggleSet: { set in
                         viewModel.toggleSetComplete(set, in: workoutExercise.id)
                     },
                     onUpdateReps: { set, reps in
                         viewModel.updateSetReps(set, reps: reps, in: workoutExercise.id)
+                    },
+                    onUpdateWeight: { set, weight in
+                        viewModel.updateSetWeight(set, weight: weight, in: workoutExercise.id)
                     },
                     onRemove: { viewModel.removeExercise(workoutExercise.id) }
                 )
@@ -163,9 +256,11 @@ struct ActiveWorkoutView: View {
 
 struct ExerciseCard: View {
     let workoutExercise: WorkoutExercise
+    let showWeight: Bool
     let onAddSet: () -> Void
     let onToggleSet: (ExerciseSet) -> Void
     let onUpdateReps: (ExerciseSet, Int) -> Void
+    let onUpdateWeight: (ExerciseSet, Double) -> Void
     let onRemove: () -> Void
 
     var body: some View {
@@ -174,9 +269,15 @@ struct ExerciseCard: View {
                 VStack(alignment: .leading) {
                     Text(workoutExercise.exercise.name)
                         .font(.headline)
-                    Text(workoutExercise.exercise.category.displayName)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    HStack {
+                        Text(workoutExercise.exercise.category.displayName)
+                        if !workoutExercise.exercise.equipment.isEmpty {
+                            Text("•")
+                            Text(workoutExercise.exercise.equipment.joined(separator: ", "))
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 }
                 Spacer()
                 Button(action: onRemove) {
@@ -190,8 +291,10 @@ struct ExerciseCard: View {
                 SetRow(
                     setNumber: index + 1,
                     set: set,
+                    showWeight: showWeight,
                     onToggle: { onToggleSet(set) },
-                    onUpdateReps: { reps in onUpdateReps(set, reps) }
+                    onUpdateReps: { reps in onUpdateReps(set, reps) },
+                    onUpdateWeight: { weight in onUpdateWeight(set, weight) }
                 )
             }
 
@@ -212,10 +315,13 @@ struct ExerciseCard: View {
 struct SetRow: View {
     let setNumber: Int
     let set: ExerciseSet
+    let showWeight: Bool
     let onToggle: () -> Void
     let onUpdateReps: (Int) -> Void
+    let onUpdateWeight: (Double) -> Void
 
     @State private var repsText: String = ""
+    @State private var weightText: String = ""
 
     var body: some View {
         HStack {
@@ -227,6 +333,7 @@ struct SetRow: View {
             TextField("Reps", text: $repsText)
                 .keyboardType(.numberPad)
                 .textFieldStyle(.roundedBorder)
+                .frame(width: showWeight ? 70 : nil)
                 .onChange(of: repsText) { _, newValue in
                     if let reps = Int(newValue) {
                         onUpdateReps(reps)
@@ -235,6 +342,26 @@ struct SetRow: View {
                 .onAppear {
                     repsText = set.reps > 0 ? "\(set.reps)" : ""
                 }
+
+            if showWeight {
+                TextField("Weight", text: $weightText)
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: weightText) { _, newValue in
+                        if let weight = Double(newValue) {
+                            onUpdateWeight(weight)
+                        }
+                    }
+                    .onAppear {
+                        if let weight = set.weight, weight > 0 {
+                            weightText = String(format: "%.1f", weight)
+                        }
+                    }
+
+                Text("kg")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
 
             Button(action: onToggle) {
                 Image(systemName: set.completed ? "checkmark.circle.fill" : "circle")
@@ -252,6 +379,19 @@ struct ExercisePickerView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // Equipment Info
+                HStack {
+                    Image(systemName: viewModel.activeWorkout?.equipmentLevel.icon ?? "figure.stand")
+                    Text(viewModel.activeWorkout?.equipmentLevel.displayName ?? "No Equipment")
+                    Text("•")
+                    Text("\(viewModel.filteredExercises.count) exercises")
+                }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemGray6))
+
                 // Category Filter
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -278,16 +418,39 @@ struct ExercisePickerView: View {
                     Button {
                         viewModel.addExercise(exercise)
                     } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(exercise.name)
-                                .font(.headline)
-                                .foregroundColor(.primary)
-                            Text(exercise.description)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Text(exercise.muscleGroups.map { $0.displayName }.joined(separator: ", "))
-                                .font(.caption)
-                                .foregroundColor(.blue)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text(exercise.name)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+
+                                    if exercise.equipmentLevel != .none {
+                                        Image(systemName: exercise.equipmentLevel.icon)
+                                            .font(.caption)
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+
+                                Text(exercise.description)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+
+                                HStack {
+                                    Text(exercise.muscleGroups.map { $0.displayName }.joined(separator: ", "))
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+
+                                    if !exercise.equipment.isEmpty {
+                                        Text("•")
+                                            .foregroundColor(.secondary)
+                                        Text(exercise.equipment.joined(separator: ", "))
+                                            .font(.caption)
+                                            .foregroundColor(.orange)
+                                    }
+                                }
+                            }
+                            Spacer()
                         }
                         .padding(.vertical, 4)
                     }

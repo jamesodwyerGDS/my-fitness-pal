@@ -25,12 +25,13 @@ class WorkoutService {
     }
 
     @discardableResult
-    func createWorkout(name: String, date: String = Date().dateString) -> Workout {
+    func createWorkout(name: String, date: String = Date().dateString, equipmentLevel: EquipmentLevel = .none) -> Workout {
         var workouts = getAllWorkouts()
         let workout = Workout(
             name: name,
             date: date,
-            startTime: Date().timeString
+            startTime: Date().timeString,
+            equipmentLevel: equipmentLevel
         )
         workouts.append(workout)
         storage.save(workouts, for: .workouts)

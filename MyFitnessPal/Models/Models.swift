@@ -2,6 +2,36 @@ import Foundation
 
 // MARK: - Exercise Types
 
+enum EquipmentLevel: String, Codable, CaseIterable {
+    case none           // No equipment - bodyweight only
+    case minimal        // Minimal equipment - dumbbells, resistance bands, pull-up bar
+    case full           // Full gym - barbells, machines, cable systems
+
+    var displayName: String {
+        switch self {
+        case .none: return "No Equipment"
+        case .minimal: return "Minimal Equipment"
+        case .full: return "Full Gym"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .none: return "figure.stand"
+        case .minimal: return "dumbbell.fill"
+        case .full: return "building.2.fill"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .none: return "Bodyweight exercises only"
+        case .minimal: return "Dumbbells, bands, pull-up bar"
+        case .full: return "Full gym access"
+        }
+    }
+}
+
 enum ExerciseCategory: String, Codable, CaseIterable {
     case push
     case pull
@@ -44,7 +74,12 @@ struct Exercise: Identifiable, Codable {
     let category: ExerciseCategory
     let muscleGroups: [MuscleGroup]
     let description: String
-    let isBodyweight: Bool
+    let equipmentLevel: EquipmentLevel
+    let equipment: [String]  // List of required equipment (empty for bodyweight)
+
+    var isBodyweight: Bool {
+        equipmentLevel == .none
+    }
 }
 
 struct ExerciseSet: Identifiable, Codable {
@@ -88,8 +123,9 @@ struct Workout: Identifiable, Codable {
     var exercises: [WorkoutExercise]
     var notes: String?
     var completed: Bool
+    var equipmentLevel: EquipmentLevel
 
-    init(id: String = UUID().uuidString, name: String, date: String, startTime: String? = nil, endTime: String? = nil, exercises: [WorkoutExercise] = [], notes: String? = nil, completed: Bool = false) {
+    init(id: String = UUID().uuidString, name: String, date: String, startTime: String? = nil, endTime: String? = nil, exercises: [WorkoutExercise] = [], notes: String? = nil, completed: Bool = false, equipmentLevel: EquipmentLevel = .none) {
         self.id = id
         self.name = name
         self.date = date
@@ -98,6 +134,7 @@ struct Workout: Identifiable, Codable {
         self.exercises = exercises
         self.notes = notes
         self.completed = completed
+        self.equipmentLevel = equipmentLevel
     }
 }
 
